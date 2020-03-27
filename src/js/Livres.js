@@ -14,7 +14,6 @@ class Livres {
 	}
 
 	afficher(){
-		this.effacer();
 		this.requeteAJAX(function(r){
 			livres.afficherDispos(r);
 		},"php/LivresRequeteDispos.php");
@@ -43,8 +42,10 @@ class Livres {
 	}
 
 	afficherDispos(requete){
+		this.effacerDispos();
+
+		console.log(requete)
 		let xhrJSON = JSON.parse(requete.responseText);
-		
 		let div = document.getElementById("listeLivresDisponibles");
 		let ul = document.createElement("ul");
 		div.appendChild(ul);
@@ -57,6 +58,7 @@ class Livres {
 	}
 
 	afficherEmpruntes(requete){
+		this.effacerEmpruntes();
 		let xhrJSON = JSON.parse(requete.responseText);
 		let div = document.getElementById("listeLivresEmpruntes");
 		let ul = document.createElement("ul");
@@ -66,6 +68,15 @@ class Livres {
 			let li = document.createElement("li");
 			li.innerHTML = xhrJSON[i].idLivre+"-"+xhrJSON[i].titreLivre;
 			div.children[0].appendChild(li);
+		}
+	}
+
+	ajouter(){
+		let livre = document.getElementById("titreLivre");
+		if(livre.value.length != 0){
+			let url = "php/requeteCreateLivre.php?titre="+livre.value;
+			this.requeteAJAX(function(r){livres.afficherDispos(r);},url);
+			livre.value = "";
 		}
 	}
 }

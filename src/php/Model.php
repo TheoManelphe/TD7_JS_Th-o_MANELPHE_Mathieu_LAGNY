@@ -82,6 +82,22 @@ class Model {
 		}
 	}
 
+	public static function saveLivres($titre) {
+		try {
+		    $sql = "INSERT INTO livre (idLivre, titreLivre) VALUES (NULL, :titre_tag)";
+		    // Préparation de la requête
+		    $req_prep = Model::$pdo->prepare($sql);
+
+		    $values = array(
+		        "titre_tag" => $titre,
+		    );
+		    // On donne les valeurs et on exécute la requête
+		    $req_prep->execute($values);
+	    } catch (PDOException $e) {
+			echo $e->getMessage();
+			die("Erreur lors de la recherche dans la base de données.");
+		}
+	}
 }
 
 // on initialise la connexion $pdo
