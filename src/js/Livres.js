@@ -4,22 +4,24 @@ class Livres {
 		this.afficher();
 	}
 
-	requeteAJAX(callback, url) {
+	requeteAJAX(url, callback) {
 		let requete = new XMLHttpRequest();
 		requete.open("GET", url, true);
-		requete.addEventListener("load", function () {
-			callback(requete);
-		});
+		if(callback !== undefined){
+			requete.addEventListener("load", function () {
+				callback(requete);
+			});
+		}
 		requete.send(null);
 	}
 
 	afficher(){
-		this.requeteAJAX(function(r){
+		this.requeteAJAX("php/LivresRequeteDispos.php",function(r){
 			livres.afficherDispos(r);
-		},"php/LivresRequeteDispos.php");
-		this.requeteAJAX(function(r){
+		});
+		this.requeteAJAX("php/LivresRequeteEmpruntes.php",function(r){
 			livres.afficherEmpruntes(r);
-		},"php/LivresRequeteEmpruntes.php");
+		});
 	}
 
 	effacer(){
@@ -75,8 +77,11 @@ class Livres {
 		let livre = document.getElementById("titreLivre");
 		if(livre.value.length != 0){
 			let url = "php/requeteCreateLivre.php?titre="+livre.value;
-			this.requeteAJAX(function(r){livres.afficherDispos(r);},url);
+			this.requeteAJAX(url);
 			livre.value = "";
 		}
+		this.requeteAJAX("php/LivresRequeteDispos.php",function(r){
+			livres.afficherDispos(r);
+		});
 	}
 }

@@ -2,6 +2,6 @@
 
 require_once('Model.php');
 
-$tab = Model::saveLivres($GET_["titre"]);
+$tab = Model::saveLivres($_GET["titre"]);
 
 ?>
