@@ -1,3 +1,3 @@
-let adherents = new Adherents();
-
+let adherents = new Adherent();
+let livres = new Livres();
 

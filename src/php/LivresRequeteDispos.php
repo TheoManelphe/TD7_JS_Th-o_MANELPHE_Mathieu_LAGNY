@@ -1,10 +1,8 @@
 <?php
 
 require_once('Model.php');
-require_once('Conf.php');
 
-
-$tab = Model::selectAdh();
+$tab = Model::selectLivresDispos();
 
 echo json_encode($tab);
 
