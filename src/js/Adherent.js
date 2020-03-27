@@ -1,0 +1,1 @@
+		p.innerHTML = tableau[i];
