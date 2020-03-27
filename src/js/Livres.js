@@ -1,10 +1,10 @@
 class Livres {
+	
 	constructor() {
-		this.requeteAJAX(this.callback_3);
+		this.afficher();
 	}
 
-	requeteAJAX(callback) {
-		let url = "php/Livres.php";
+	requeteAJAX(callback, url) {
 		let requete = new XMLHttpRequest();
 		requete.open("GET", url, true);
 		requete.addEventListener("load", function () {
@@ -13,19 +13,59 @@ class Livres {
 		requete.send(null);
 	}
 
-	callback_1(req) {console.log(req);}
+	afficher(){
+		this.effacer();
+		this.requeteAJAX(function(r){
+			livres.afficherDispos(r);
+		},"php/LivresRequeteDispos.php");
+		this.requeteAJAX(function(r){
+			livres.afficherEmpruntes(r);
+		},"php/LivresRequeteEmpruntes.php");
+	}
 
-	callback_2(req) {console.log(JSON.parse(req.responseText));}
+	effacer(){
+		this.effacerDispos();
+		this.effacerEmpruntes();
+	}
 
-	callback_3(req) {
-		let tab = JSON.parse(req.responseText);
-		let tabAdh = new Array();
-		for(let i = 0; i < tab.length; i++) {
-			tabAdh.push(tab[i]["nomAdherent"]);
+	effacerDispos(){
+		let div = document.getElementById("listeLivresDisponibles");
+		while(div.children.length > 0){
+			div.removeChild(div.lastChild);
 		}
-		console.log(tabAdh);
-		console.log(tab)
-		console.log();
-		afficherAdh(tabAdh);
+	}
+
+	effacerEmpruntes(){
+		let div = document.getElementById("listeLivresEmpruntes");
+		while(div.children.length > 0){
+			div.removeChild(div.lastChild);
+		}
+	}
+
+	afficherDispos(requete){
+		let xhrJSON = JSON.parse(requete.responseText);
+		
+		let div = document.getElementById("listeLivresDisponibles");
+		let ul = document.createElement("ul");
+		div.appendChild(ul);
+
+		for (var i = 0; i < xhrJSON.length; i++) {
+			let li = document.createElement("li");
+			li.innerHTML = xhrJSON[i].idLivre+"-"+xhrJSON[i].titreLivre;
+			div.children[0].appendChild(li);
+		}
+	}
+
+	afficherEmpruntes(requete){
+		let xhrJSON = JSON.parse(requete.responseText);
+		let div = document.getElementById("listeLivresEmpruntes");
+		let ul = document.createElement("ul");
+		div.appendChild(ul);
+
+		for (var i = 0; i < xhrJSON.length; i++) {
+			let li = document.createElement("li");
+			li.innerHTML = xhrJSON[i].idLivre+"-"+xhrJSON[i].titreLivre;
+			div.children[0].appendChild(li);
+		}
 	}
 }

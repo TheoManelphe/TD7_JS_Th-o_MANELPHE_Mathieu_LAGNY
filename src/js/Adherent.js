@@ -13,7 +13,7 @@ class Adherent {
 	}
 
 	requeteAJAX(callback) {
-		let url = "php/Adhereq.php";
+		let url = "php/Adhreq.php";
 		let requete = new XMLHttpRequest();
 		requete.open("GET", url, true);
 		requete.addEventListener("load", function () {
@@ -41,9 +41,6 @@ class Adherent {
 		for(let i = 0; i < tab.length; i++) {
 			tabAdh.push(tab[i]["nomAdherent"]);
 		}
-		console.log(tabAdh);
-		console.log(tab)
-		console.log();
-		afficherAdh(tabAdh);
+		adherents.afficherAdh(tabAdh);
 	}
 }
