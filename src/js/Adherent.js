@@ -1,9 +1,10 @@
 class Adherent {
 	constructor() {
-		this.requeteAJAX(this.callback_3);
+		this.requeteAJAX("php/Adhreq.php",this.callback_3);
 	}
 
 	afficherAdh(tableau) {
+		adherents.videAdh();
 		let la = document.getElementById("listeAdherents");
 		for (let i = 0; i < tableau.length; i ++) {
 			let p = document.createElement('p');
@@ -12,16 +13,16 @@ class Adherent {
 		}
 	}
 
-	requeteAJAX(callback) {
-		let url = "php/Adhreq.php";
+	requeteAJAX(url, callback) {
 		let requete = new XMLHttpRequest();
 		requete.open("GET", url, true);
-		requete.addEventListener("load", function () {
-			callback(requete);
-		});
+		if(callback !== undefined){
+			requete.addEventListener("load", function () {
+				callback(requete);
+			});
+		}
 		requete.send(null);
 	}
-
 
 	videAdh() {
 		let la = document.getElementById("listeAdherents");
@@ -29,6 +30,16 @@ class Adherent {
 			la.removeChild(la.firstChild);
 		}
 		la.style.borderWidth = "0px";
+	}
+
+	ajouter(){
+		let nomAdherent = document.getElementById("nomAdherent");
+		if(nomAdherent.value.length != 0){
+			let url = "php/requeteCreateAdherent.php?nom="+nomAdherent.value;
+			this.requeteAJAX(url);
+			nomAdherent.value = "";
+		}
+		this.requeteAJAX("php/Adhreq.php",this.callback_3);
 	}
 
 	callback_1(req) {console.log(req);}

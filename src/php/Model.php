@@ -98,6 +98,23 @@ class Model {
 			die("Erreur lors de la recherche dans la base de données.");
 		}
 	}
+
+	public static function saveAdherent($nom) {
+		try {
+		    $sql = "INSERT INTO adherent (idAdherent, nomAdherent) VALUES (NULL, :nom_tag)";
+		    // Préparation de la requête
+		    $req_prep = Model::$pdo->prepare($sql);
+
+		    $values = array(
+		        "nom_tag" => $nom,
+		    );
+		    // On donne les valeurs et on exécute la requête
+		    $req_prep->execute($values);
+	    } catch (PDOException $e) {
+			echo $e->getMessage();
+			die("Erreur lors de la recherche dans la base de données.");
+		}
+	}
 }
 
 // on initialise la connexion $pdo

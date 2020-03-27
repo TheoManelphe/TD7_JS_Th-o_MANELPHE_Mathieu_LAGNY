@@ -4,4 +4,5 @@ let livres = new Livres();
 let ajouterLivre = document.getElementById("ajouterLivre");
 ajouterLivre.addEventListener("click",function(){livres.ajouter();});
 
-//La vie au XIVe siecle
+let ajouterAdherent = document.getElementById("ajouterAdherent");
+ajouterAdherent.addEventListener("click",function(){adherents.ajouter();});
