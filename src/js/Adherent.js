@@ -1,15 +1,28 @@
 class Adherent {
 	constructor() {
-		this.requeteAJAX("php/Adhreq.php",this.callback_3);
+		this.afficher();
 	}
 
-	afficherAdh(tableau) {
-		adherents.videAdh();
-		let la = document.getElementById("listeAdherents");
-		for (let i = 0; i < tableau.length; i ++) {
-			let p = document.createElement('p');
-		p.innerHTML = tableau[i];
-			la.appendChild(p);
+	afficher(){
+		this.requeteAJAX("php/Adhreq.php",function(r){
+			adherents.afficherAdherents(r);
+		});
+	}
+
+	afficherAdherents(requete) {
+		this.videAdh();
+		let liste = JSON.parse(requete.responseText);
+		let div = document.getElementById("listeAdherents");
+		let ul = document.createElement("ul");
+		div.appendChild(ul);
+
+		for (var i = 0; i < liste.length; i++) {
+			let li = document.createElement("li");
+			li.innerHTML = liste[i].idAdherent+"-"+liste[i].nomAdherent;
+			if(liste[i].nbEmprunt > 0){
+				li.innerHTML += " ("+liste[i].nbEmprunt+(liste[i].nbEmprunt > 1?" emprunts)":" emprunt)");
+			}
+			div.children[0].appendChild(li);
 		}
 	}
 
@@ -40,18 +53,5 @@ class Adherent {
 			nomAdherent.value = "";
 		}
 		this.requeteAJAX("php/Adhreq.php",this.callback_3);
-	}
-
-	callback_1(req) {console.log(req);}
-
-	callback_2(req) {console.log(JSON.parse(req.responseText));}
-
-	callback_3(req) {
-		let tab = JSON.parse(req.responseText);
-		let tabAdh = new Array();
-		for(let i = 0; i < tab.length; i++) {
-			tabAdh.push(tab[i]["nomAdherent"]);
-		}
-		adherents.afficherAdh(tabAdh);
 	}
 }

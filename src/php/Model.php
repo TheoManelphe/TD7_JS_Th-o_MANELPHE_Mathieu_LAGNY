@@ -28,7 +28,7 @@ class Model {
 	public static function selectAdh() {
 		try {
 			// préparation de la requête
-			$sql = "SELECT * FROM adherent";
+			$sql = "SELECT A.idAdherent, nomAdherent, COUNT(E.idAdherent) AS nbEmprunt FROM adherent A LEFT JOIN emprunt E ON E.idAdherent = A.idAdherent GROUP BY A.idAdherent;";
 			$req_prep = self::$pdo->prepare($sql);
 			// passage de la valeur de name_tag
 			$values = array();
@@ -111,6 +111,65 @@ class Model {
 		    // On donne les valeurs et on exécute la requête
 		    $req_prep->execute($values);
 	    } catch (PDOException $e) {
+			echo $e->getMessage();
+			die("Erreur lors de la recherche dans la base de données.");
+		}
+	}
+
+	public static function emprunterLivre($idLivre, $idAdherent) {
+		try {
+		    $sql = "INSERT INTO emprunt (idAdherent, idLivre) VALUES (:idAdherent_tag, :idLivre_tag)";
+		    // Préparation de la requête
+		    $req_prep = Model::$pdo->prepare($sql);
+
+		    $values = array(
+		        "idAdherent_tag" => $idAdherent,
+		        "idLivre_tag" => $idLivre,
+		    );
+		    // On donne les valeurs et on exécute la requête
+		    $req_prep->execute($values);
+	    } catch (PDOException $e) {
+	    	if ($e->getCode()==1452) {
+	    		die("FOREIGN KEY");
+	    	} else {
+				die("Erreur lors de la recherche dans la base de données.");
+			}
+		}
+	}
+
+	public static function rendreLivre($idLivre) {
+		try {
+		    $sql = "DELETE FROM emprunt WHERE idLivre = :idLivre_tag";
+		    // Préparation de la requête
+		    $req_prep = Model::$pdo->prepare($sql);
+
+		    $values = array(
+		        "idLivre_tag" => $idLivre,
+		    );
+		    // On donne les valeurs et on exécute la requête
+		    $req_prep->execute($values);
+	    } catch (PDOException $e) {
+			echo $e->getMessage();
+			die("Erreur lors de la recherche dans la base de données.");
+		}
+	}
+
+	public static function selectEmprunteur($idLivre) {
+		try {
+			// préparation de la requête
+			$sql = "SELECT A.idAdherent, nomAdherent FROM adherent A JOIN emprunt E ON E.idAdherent=A.idAdherent WHERE E.idLivre=:idLivre_tag";
+			$req_prep = self::$pdo->prepare($sql);
+			// passage de la valeur de name_tag
+			$values = array(
+				"idLivre_tag" => $idLivre,
+			);
+			// exécution de la requête préparée
+			$req_prep->execute($values);
+			$req_prep->setFetchMode(PDO::FETCH_OBJ);
+			$tabResults = $req_prep->fetchAll();
+			// renvoi du tableau de résultats
+			return $tabResults;
+		} catch (PDOException $e) {
 			echo $e->getMessage();
 			die("Erreur lors de la recherche dans la base de données.");
 		}

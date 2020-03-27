@@ -2,7 +2,7 @@
 
 require_once('Model.php');
 
-$tab = Model::selectAdh();
+$tab = Model::selectEmprunteur($_GET["idLivre"]);
 
 echo json_encode($tab);
 
